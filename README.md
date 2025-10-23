@@ -13,8 +13,6 @@ This repository provides a reproducible **R Markdown workflow** for analyzing sp
 * **Groups:** 2 experimental groups (e.g., control vs treatment)
 * **Data type:** Gene expression counts with spatial coordinates
 
-*(Optional: Include links to data or instructions for data access if allowed.)*
-
 ## Analysis Workflow
 
 The R Markdown (`.Rmd`) script includes the following steps:
