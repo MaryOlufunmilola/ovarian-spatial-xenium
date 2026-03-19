@@ -1,30 +1,25 @@
-# R specific
-.Rhistory
-.RData
-.Rproj.user/
-.Ruserdata
+# Data and results — never commit these
+data/
+results/
 
-# R Markdown caches and figures
-*.html
-*.pdf
-*.docx
-*.nb.html
-*_files/
-cache/
-figures/
-
-# Xenium / SpatialExperiment intermediate files
+# Large / sensitive Xenium file types
 *.rds
-*.rda
-*.loom
+*.RData
 *.h5
 *.h5ad
+*.zarr
+*.tiff
+*.btf
+*.arrow
+*.parquet
 
-# Temporary or OS files
+# R session artifacts
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# OS clutter
 .DS_Store
 Thumbs.db
-*.tmp
-
-# Package-specific directories
-renv/library/
-renv/staging/

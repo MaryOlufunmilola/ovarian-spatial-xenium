@@ -1,0 +1,13 @@
+#!/bin/bash
+# ----------------------------------------------------------
+# postInstall — Code Ocean Environment Setup
+# Runs once when the environment image is built.
+# Add all GitHub-sourced R packages here so they are
+# available at runtime without needing internet access.
+# ----------------------------------------------------------
+
+# Install GitHub packages via devtools
+Rscript -e "devtools::install_github('jokergoo/ComplexHeatmap', upgrade = 'never')"
+Rscript -e "devtools::install_github('jokergoo/circlize', upgrade = 'never')"
+Rscript -e "devtools::install_github('jinworks/CellChat', upgrade = 'never')"
+Rscript -e "devtools::install_github('immunogenomics/presto', upgrade = 'never')"
