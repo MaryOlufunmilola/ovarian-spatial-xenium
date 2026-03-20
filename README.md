@@ -12,7 +12,7 @@ This repository contains the R code by Funmi Oyebamiji for the **Xenium spatial 
 This codebase covers spatial transcriptomics processing, clustering, cell-type annotation, and figure generation.
 
 A fully reproducible computational capsule is available on Code Ocean:  
-🔁 **Code Ocean DOI:** `[PLACEHOLDER — add after capsule is published]`
+**Code Ocean DOI:** `[PLACEHOLDER — add after capsule is published]`
 
 ---
 
@@ -76,9 +76,9 @@ devtools::install_github("immunogenomics/presto")
 2. Xenium data files are attached to the capsule under `/data`
 3. Click **Reproducible Run** — scripts execute automatically via `run.sh`
 
-> ⚠️ **Important — two-run requirement for `figure_script_1.R`**
+> **Important — two-run requirement for `figure_script_1.R`**
 >
-> The CellChat spatial pipeline (`figure_script_1.R`) must be run **twice** — once per condition (VSTM5 Low, VSTM5 High) — due to RAM constraints. Each run requires >64 GB of RAM; running both conditions simultaneously would exceed available memory.
+> The CellChat spatial pipeline (`figure_script_1.R`) must be run **twice**, once per condition (VSTM5 Low, VSTM5 High) due to RAM constraints. Each run requires >64 GB of RAM; running both conditions simultaneously would exceed available memory.
 >
 > The automated **Reproducible Run** (via `run.sh`) executes the Low condition by default. To reproduce the High condition:
 >
@@ -134,7 +134,3 @@ If you use this code, please cite:
 This code is released under the [MIT License](https://opensource.org/licenses/MIT). See `LICENSE` for details.
 
 ---
-
-## Acknowledgements
-
-Spatial transcriptomics data were generated from ovarian cancer patient samples. 
