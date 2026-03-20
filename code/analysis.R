@@ -15,14 +15,14 @@ if (!exists("save_pptx"))  source("/code/functions.R")
 # STEP 1 — Load and pre-process Xenium samples
 # ==========================================================================
 
-xfiles     <- list.files(dataDir, pattern = "XETG00270")
+xfiles     <- list.files(dataDir, pattern = "Changelater")
 xenium.obj <- list()
 sample_ids <- c()
 
 for (i in xfiles) {
   message("  Preparing spatial data for sample: ", i)
 
-  j <- gsub("-", ".", strsplit(gsub("INST_1419-", "", i), "__")[[1]][3])
+  j <- gsub("-", ".", strsplit(gsub("Changelater", "", i), "__")[[1]][3])
   stopifnot("Sample ID parsing failed — check filename format" = !is.na(j) && nchar(j) > 0)
   sample_ids <- c(sample_ids, j)
 
@@ -46,9 +46,9 @@ message("Step 2.1: Done merging samples...")
 
 # ── Group assignments — replace placeholder names with actual sample j values
 # Run unique(xen_integrated$sample) after merge to confirm exact names
-vstm5_low_samples  <- c("NM004.00001", "NM004.00003", "NM004.00008", "NM004.00014", "NM004.00025")  
+vstm5_low_samples  <- c("401", "403", "408", "414", "425")  
 vstm5_high_samples <- setdiff(unique(xen_integrated$sample), vstm5_low_samples)
-ifit1b_low_samples  <- c("NM004.00001", "NM004.00002", "NM004.00003")                          
+ifit1b_low_samples  <- c("401", "402", "403")                          
 ifit1b_high_samples <- setdiff(unique(xen_integrated$sample), ifit1b_low_samples)
 
 xen_integrated$VSTM5_Orig_ident  <- ifelse(xen_integrated$sample %in% vstm5_low_samples,  "Low", "High")
