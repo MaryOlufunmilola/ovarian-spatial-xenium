@@ -9,30 +9,28 @@ set.seed(1234)
 
 # ── Source dependencies if running interactively outside run.sh ──────────────
 if (!exists("dataDir"))    source("/code/load_libraries.R")
-if (!exists("save_pptx"))  source("/code/functions.R")
+source("/code/functions.R")
 
 # ==========================================================================
 # STEP 1 — Load and pre-process Xenium samples
 # ==========================================================================
 
-xfiles     <- list.files(dataDir, pattern = "Changelater")
+xfiles     <- list.files(dataDir)
 xenium.obj <- list()
 sample_ids <- c()
 
 for (i in xfiles) {
   message("  Preparing spatial data for sample: ", i)
 
-  j <- gsub("-", ".", strsplit(gsub("Changelater", "", i), "__")[[1]][3])
-  stopifnot("Sample ID parsing failed — check filename format" = !is.na(j) && nchar(j) > 0)
-  sample_ids <- c(sample_ids, j)
+  sample_ids <- c(sample_ids, i)
 
-  xenium.obj[[j]] <- LoadXenium(paste0(dataDir, i), fov = j, segmentations = "cell")
-  xenium.obj[[j]]$sample <- j
+  xenium.obj[[i]] <- LoadXenium(paste0(dataDir, i), fov = i, segmentations = "cell")
+  xenium.obj[[i]]$sample <- i
 
   #saveRDS(xenium.obj[[j]], paste0(resultsDir, j, ".rds"))
 
   # QC filter: remove cells with fewer than 20 transcript counts
-  xenium.obj[[j]] <- subset(xenium.obj[[j]], subset = nCount_Xenium > 20)
+  xenium.obj[[i]] <- subset(xenium.obj[[i]], subset = nCount_Xenium > 20)
 }
 message("Step 1: Done loading samples...")
 
