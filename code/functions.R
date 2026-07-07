@@ -31,9 +31,9 @@ cell_colors <- c(
   "EPCAM\u207A Epithelial"          = "#CFBEB4",  # ⁺ unicode
   "MKI67\u207A Epithelial"          = "#B1B6BA",
   "IFIT\u207A Epithelial"           = "#968F9F",
-  "EPCAM+ Epithelial"               = "#CFBEB4",  # plain + fallback
-  "MKI67+ Epithelial"               = "#B1B6BA",
-  "IFIT+ Epithelial"                = "#968F9F",
+  #"EPCAM+ Epithelial"               = "#CFBEB4",  # plain + fallback
+  #"MKI67+ Epithelial"               = "#B1B6BA",
+  #"IFIT+ Epithelial"                = "#968F9F",
   "Fibroblasts"                     = "#33A02C",
   "Perivascular Endothelial"        = "#A6D854",
   "Macrophages"                     = "#E31A1C",
@@ -263,25 +263,29 @@ run_cellchat_pipeline <- function(seurat_list,
     message("Processing condition: ", cond)
 
     # ── Pull data ──────────────────────────────────────────────────────
-    data.input <- Seurat::GetAssayData(obj, slot = "data", assay = assay)
+    data.input <- Seurat::GetAssayData(obj, layer = "data", assay = assay)
 
     # ── Merge tissue coordinates across all images ─────────────────────────
-    image_names <- Seurat::Images(obj)
-    all_tissue_coordinates <- setNames(
-      lapply(image_names, function(img_name) {
+    if (all(c("x", "y") %in% colnames(obj@meta.data))) {
+      # Toy data — coordinates stored in metadata, survive merging
+      merged_cords <- as.matrix(obj@meta.data[, c("x", "y")])
+    } else {
+      # Real data — get from images (one per sample, multiple after merge)
+      image_names  <- Seurat::Images(obj)
+      all_coords   <- lapply(image_names, function(img_name) {
         Seurat::GetTissueCoordinates(object = obj, image = img_name)
-      }),
-      image_names
-    )
-    merged_cords           <- data.table::rbindlist(all_tissue_coordinates)
-    rownames(merged_cords) <- merged_cords$cell
-    merged_cords$cell      <- NULL
-
+      })
+      merged_cords           <- data.table::rbindlist(all_coords)
+      rownames(merged_cords) <- merged_cords$cell
+      merged_cords$cell      <- NULL
+    }
+    
     # ── Prepare metadata ───────────────────────────────────────────────────
     meta <- obj@meta.data
     colnames(meta)[colnames(meta) == "sample"] <- "samples"
     meta$samples <- as.factor(meta$samples)
     meta$labels  <- meta[[celltype_col]]
+    #meta$labels <- droplevels(as.factor(meta$labels))
 
     # ── Create CellChat object ─────────────────────────────────────────────
     spatial.factors <- data.frame(ratio = 1, tol = 10)
@@ -294,11 +298,14 @@ run_cellchat_pipeline <- function(seurat_list,
       spatial.factors = spatial.factors
     )
 
+    #cellchat@idents <- droplevels(cellchat@idents)
+
     # ── Database and gene filtering ────────────────────────────────────────
     cellchat@DB <- CellChat::subsetDB(CellChat::CellChatDB.human)
     cellchat    <- CellChat::subsetData(cellchat, features = NULL)
 
     future::plan("multisession", workers = workers)
+    options(future.globals.maxSize = 3000 * 1024^2) 
     cellchat <- CellChat::identifyOverExpressedGenes(cellchat)
     cellchat <- CellChat::identifyOverExpressedInteractions(cellchat)
 
@@ -317,6 +324,7 @@ run_cellchat_pipeline <- function(seurat_list,
       nboot             = nboot
     )
     future::plan("sequential")
+    options(future.globals.maxSize = 600 * 1024^3)
 
     # ── Post-processing ────────────────────────────────────────────────────
     cellchat <- CellChat::filterCommunication(cellchat, min.cells = 10)

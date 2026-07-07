@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -ex
+
+Rscript /code/analysis.R
+Rscript /code/figure_script_1.R Low
+Rscript /code/figure_script_1.R High
+Rscript /code/figure_script_2.R
+ 

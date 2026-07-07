@@ -1,25 +1,39 @@
-# Data and results — never commit these
-data/
-results/
-
-# Large / sensitive Xenium file types
-*.rds
-*.RData
-*.h5
-*.h5ad
-*.zarr
-*.tiff
-*.btf
-*.arrow
-*.parquet
-
-# R session artifacts
-.Rproj.user/
+# R artifacts
 .Rhistory
 .RData
-.Ruserdata
+.Rproj.user/
 *.Rproj
 
-# OS clutter
+# Large data files, stored in Code Ocean /data, not GitHub
+*.rds
+*.RDS
+*.h5
+*.h5ad
+*.parquet
+*.arrow
+
+# Results, generated outputs, not source code
+/results/
+*.pptx
+*.png
+*.pdf
+*.csv
+
+# Temporary files
+*.tmp
+*.log
+tmp/
+temp/
+
+# OS artifacts
 .DS_Store
 Thumbs.db
+
+# Code Ocean specific
+/data/
+1419 manuscript FEB 23 2026.docx
+HTR_PowerPoint Vignette 2_HTR-ATG-Bi*.pptx
+scRNA_figures_template.jpg
+figure_script_1.R
+figure_script_2.R
+REPRODUCING.md
