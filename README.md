@@ -1,6 +1,5 @@
 # Spatial Transcriptomics Analysis of Ovarian Cancer Patient Samples
 
-> **Manuscript title:** [PLACEHOLDER — update when accepted]  
 > **Journal:** Nature Communications (submitted)  
 > **Code authors:** Funmi Oyebamiji, Eleanor Paskus
 
@@ -11,7 +10,7 @@
 This repository contains the R code for the Xenium spatial transcriptomics component of a multi-modal study of ovarian cancer patient samples. The codebase covers spatial data loading, quality control, integration, clustering, cell-type annotation, cell-cell communication analysis (CellChat), and figure generation.
 
 A fully reproducible computational capsule is available on Code Ocean:  
-**Code Ocean DOI:** [add after capsule is published]
+**Code Ocean DOI:** to be added upon capsule publication
 
 ---
 
@@ -95,8 +94,8 @@ Rscript /code/figure_script_2.R
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/[your-username]/[your-repo].git
-cd [your-repo]
+git clone https://github.com/MaryOlufunmilola/ovarian-spatial-xenium.git
+cd ovarian-spatial-xenium
 ```
 
 2. Place your Xenium data folders under `data/` and create a `results/` folder
@@ -144,17 +143,13 @@ source("code/figure_script_2.R")
 
 Raw Xenium spatial transcriptomics data for ovarian cancer patient samples will be deposited in a public repository upon manuscript acceptance. Data access details will be updated here.
 
-For enquiries regarding data access prior to publication, contact: [corresponding author email]
-
 ---
 
 ## Citation
 
 If you use this code, please cite:
 
-[Author list placeholder]. [Manuscript title placeholder]. *Nature Communications* (submitted).  
-Code Ocean DOI: [PLACEHOLDER]  
-GitHub: https://github.com/[your-username]/[your-repo]
+GitHub: https://github.com/MaryOlufunmilola/ovarian-spatial-xenium
 
 ---
 
