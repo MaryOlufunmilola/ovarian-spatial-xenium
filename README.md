@@ -1,17 +1,17 @@
 # Spatial Transcriptomics Analysis of Ovarian Cancer Patient Samples
-
-> **Journal:** Nature Communications (submitted)  
+ 
+> **Journal:** *Nature Communications* (accepted for publication)  
 > **Code authors:** Funmi Oyebamiji, Eleanor Paskus
-
+ 
 ---
 
 ## Overview
-
-This repository contains the R code for the Xenium spatial transcriptomics component of a multi-modal study of ovarian cancer patient samples. The codebase covers spatial data loading, quality control, integration, clustering, cell-type annotation, cell-cell communication analysis (CellChat), and figure generation.
-
+ 
+This repository contains the R code for the **Xenium spatial transcriptomics component** of the study *"a phase I/II study."* The codebase covers spatial data loading, quality control, integration, clustering, cell-type annotation, cell-cell communication analysis (CellChat), and figure generation.
+ 
 A fully reproducible computational capsule is available on Code Ocean:  
 **Code Ocean DOI:** to be added upon capsule publication
-
+ 
 ---
 
 ## Repository structure
@@ -119,13 +119,11 @@ resultsDir <- "results/"
 6. Run scripts in order:
 
 ```r
-source("code/load_libraries.R")
-source("code/functions.R")
-source("code/analysis.R")
+Rscript code/analysis.R
 # Run figure_script_1.R twice — once per condition
 Rscript code/figure_script_1.R Low
 Rscript code/figure_script_1.R High
-source("code/figure_script_2.R")
+Rscript code/figure_script_2.R
 ```
 
 ---
@@ -141,15 +139,19 @@ source("code/figure_script_2.R")
 
 ## Data availability
 
-Raw Xenium spatial transcriptomics data for ovarian cancer patient samples will be deposited in a public repository upon manuscript acceptance. Data access details will be updated here.
+The manuscript has been accepted for publication. Raw Xenium spatial transcriptomics data for ovarian cancer patient samples will be deposited in a public repository, and the repository and accession details will be added here.
 
 ---
 
 ## Citation
 
-If you use this code, please cite:
+If you use this code, please cite the paper:
 
-GitHub: https://github.com/MaryOlufunmilola/ovarian-spatial-xenium
+*Nature Communications* (accepted for publication).
+ 
+The DOI and volume/page details will be added here once assigned.
+ 
+Code: https://github.com/MaryOlufunmilola/ovarian-spatial-xenium
 
 ---
 
