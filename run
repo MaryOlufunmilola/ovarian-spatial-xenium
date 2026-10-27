@@ -1,8 +1,29 @@
 #!/usr/bin/env bash
-set -ex
+# Runs the full analysis in order. Code Ocean calls this with no settings.
+# From the repository root on your own machine:
+#   CODE_DIR=code DATA_DIR=data/ RESULTS_DIR=results/ USE_TOY_DATA=FALSE bash run
+# Each step's run time is written to timing.tsv in the results folder.
+set -euo pipefail
 
-Rscript /code/analysis.R
-Rscript /code/figure_script_1.R Low
-Rscript /code/figure_script_1.R High
-Rscript /code/figure_script_2.R
- 
+CODE_DIR="${CODE_DIR:-/code}"
+RESULTS_DIR="${RESULTS_DIR:-/results/}"
+export CODE_DIR RESULTS_DIR
+mkdir -p "$RESULTS_DIR"
+TIMING="${RESULTS_DIR%/}/timing.tsv"
+printf "step\tseconds\n" > "$TIMING"
+
+step() {
+  local name="$1"; shift
+  echo "==> $name"
+  local start=$SECONDS
+  "$@"
+  printf "%s\t%s\n" "$name" "$(( SECONDS - start ))" >> "$TIMING"
+}
+
+step analysis        Rscript "$CODE_DIR/analysis.R"
+step cellchat_low    Rscript "$CODE_DIR/figure_script_1.R" Low
+step cellchat_high   Rscript "$CODE_DIR/figure_script_1.R" High
+step figures         Rscript "$CODE_DIR/figure_script_2.R"
+
+echo "Done. Run times:"
+column -t "$TIMING" 2>/dev/null || cat "$TIMING"

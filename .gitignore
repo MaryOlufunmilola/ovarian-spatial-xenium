@@ -4,7 +4,8 @@
 .Rproj.user/
 *.Rproj
 
-# Large data files, stored in Code Ocean /data, not GitHub
+# Data and large objects (Xenium data are not distributed here; see README)
+/data/
 *.rds
 *.RDS
 *.h5
@@ -12,12 +13,17 @@
 *.parquet
 *.arrow
 
-# Results, generated outputs, not source code
+# Generated outputs
 /results/
 *.pptx
 *.png
 *.pdf
 *.csv
+
+# Documents and drafts
+*.docx
+*.doc
+*.jpg
 
 # Temporary files
 *.tmp
@@ -28,12 +34,3 @@ temp/
 # OS artifacts
 .DS_Store
 Thumbs.db
-
-# Code Ocean specific
-/data/
-1419 manuscript FEB 23 2026.docx
-HTR_PowerPoint Vignette 2_HTR-ATG-Bi*.pptx
-scRNA_figures_template.jpg
-figure_script_1.R
-figure_script_2.R
-REPRODUCING.md

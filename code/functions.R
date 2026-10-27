@@ -1,10 +1,8 @@
 # ----------------------------------------------------------
 # Shared Utility Functions
 # Authors: Funmi Oyebamiji
-# Sourced by: analysis.R, figure_script_1.R
-# ----------------------------------------------------------
-# Usage in each downstream script:
-#   source("/code/functions.R")
+# Sourced by: analysis.R, figure_script_1.R, figure_script_2.R, eni_figures.R
+# Expects resultsDir from load_libraries.R
 # ----------------------------------------------------------
 
 # ==========================================================================
@@ -83,7 +81,7 @@ prep_FindMarkers <- function(obj) {
 #' @param assay          Assay to use (default "SCT")
 #' @param groups_use     Subset of groups to test (default NULL = all)
 #' @param add_pct_diff   Add percent difference column (default TRUE)
-#' @param save_path      Full path to save CSV output — use /results/filename.csv
+#' @param save_path      Full path to save CSV output — in the results folder, e.g. file.path(resultsDir, "name").csv
 #' @param pairwise       Run all pairwise comparisons (default FALSE)
 run_presto <- function(seurat_obj,
                        group_by,
@@ -123,7 +121,7 @@ run_presto <- function(seurat_obj,
 #' Save a DimPlot to PNG
 #'
 #' @param seurat_obj  Seurat object
-#' @param filename    Full output path — use /results/filename.png
+#' @param filename    Full output path — in the results folder, e.g. file.path(resultsDir, "name").png
 #' @param reduction   Reduction to use e.g. "umap"
 #' @param group_by    Metadata column to colour by
 #' @param ...         Additional DimPlot arguments
@@ -165,7 +163,7 @@ save_dimplot <- function(seurat_obj, filename, reduction, group_by,
 #' Save a scCustomize DotPlot to PNG
 #'
 #' @param seurat_obj  Seurat object
-#' @param filename    Full output path — use /results/filename.png
+#' @param filename    Full output path — in the results folder, e.g. file.path(resultsDir, "name").png
 #' @param features    Gene features to plot
 #' @param group_by    Metadata column to group by
 #' @param width       PNG width in inches (default 13)
@@ -195,7 +193,7 @@ save_dotplot <- function(seurat_obj, filename, width = 13, height = 9,
 #'
 #' @param seurat_obj    Seurat object
 #' @param features      Gene features for heatmap rows
-#' @param filename      Full output path — use /results/filename.png
+#' @param filename      Full output path — in the results folder, e.g. file.path(resultsDir, "name").png
 #' @param group_by      Metadata column to group cells (default "runharmony_celltypes")
 #' @param group_colors  Named colour vector for groups
 #' @param numcells      Cells to downsample per group (default 100)
@@ -341,8 +339,8 @@ run_cellchat_pipeline <- function(seurat_list,
 
 #' Generate and save CellChat heatmaps and bubble plots for a condition pair
 #'
-#' @param rds_path    Full path to saved CellChat list RDS — use /results/filename.rds
-#' @param prefix      Output file prefix — PNGs saved to /results/prefix_*.png
+#' @param rds_path    Full path to saved CellChat list RDS — in the results folder, e.g. file.path(resultsDir, "name").rds
+#' @param prefix      Output file prefix — PNGs saved to the results folder as prefix_*.png
 #' @param cell_colors Named colour vector for cell types
 analyze_cellchat <- function(rds_path, prefix, cell_colors) {
   cellchat_list <- readRDS(rds_path)
@@ -375,14 +373,14 @@ analyze_cellchat <- function(rds_path, prefix, cell_colors) {
     )
   })
 
-  # Save heatmaps to /results/
-  png(file.path("/results", paste0(prefix, "_outgoing_heatmaps.png")),
+  # Save heatmaps to the results folder
+  png(file.path(resultsDir, paste0(prefix, "_outgoing_heatmaps.png")),
       width = 13, height = 9, res = 300, units = "in")
   ComplexHeatmap::draw(ht_outgoing[[1]] + ht_outgoing[[2]],
                        ht_gap = grid::unit(0.75, "cm"))
   dev.off()
 
-  png(file.path("/results", paste0(prefix, "_incoming_heatmaps.png")),
+  png(file.path(resultsDir, paste0(prefix, "_incoming_heatmaps.png")),
       width = 13, height = 9, res = 300, units = "in")
   ComplexHeatmap::draw(ht_incoming[[1]] + ht_incoming[[2]],
                        ht_gap = grid::unit(0.75, "cm"))
@@ -398,7 +396,7 @@ analyze_cellchat <- function(rds_path, prefix, cell_colors) {
     targets.use = c(1:4, 7:10, 12:13),
     angle.x     = 45
   )
-  png(file.path("/results", paste0(prefix, "_signaling_heatmaps_general.png")),
+  png(file.path(resultsDir, paste0(prefix, "_signaling_heatmaps_general.png")),
       width = 13, height = 9, res = 300, units = "in")
   print(gg)
   dev.off()
@@ -423,12 +421,12 @@ analyze_cellchat <- function(rds_path, prefix, cell_colors) {
     angle.x      = 45,
     remove.isolate = TRUE
   )
-  png(file.path("/results", paste0(prefix, "_signaling_heatmaps_diff.png")),
+  png(file.path(resultsDir, paste0(prefix, "_signaling_heatmaps_diff.png")),
       width = 13, height = 11, res = 300, units = "in")
   print(gg1 / gg2)
   dev.off()
 
-  message("analyze_cellchat complete — outputs saved to /results/", prefix, "_*.png")
+  message("analyze_cellchat complete: outputs saved to ", file.path(resultsDir, prefix), "_*.png")
 }
 
 
@@ -442,7 +440,7 @@ analyze_cellchat <- function(rds_path, prefix, cell_colors) {
 #' @param group_vars    Character vector of grouping column names
 #' @param fill_var      Column name for fill (cell type)
 #' @param plot_title    Title string for the plot
-#' @param output_prefix File prefix — CSV and PNG saved to /results/prefix.*
+#' @param output_prefix File prefix — CSV and PNG saved to the results folder as prefix.*
 #' @param facet_var     Optional column name for faceting
 analyze_proportions <- function(data, group_vars, fill_var, plot_title,
                                 output_prefix, facet_var = NULL) {
@@ -453,7 +451,7 @@ analyze_proportions <- function(data, group_vars, fill_var, plot_title,
     dplyr::mutate(proportion = count / sum(count)) %>%
     dplyr::ungroup()
 
-  csv_path <- file.path("/results", paste0(output_prefix, ".csv"))
+  csv_path <- file.path(resultsDir, paste0(output_prefix, ".csv"))
   write.csv(prop_df, csv_path, row.names = FALSE)
   message("Saved: ", csv_path)
 
@@ -481,7 +479,7 @@ analyze_proportions <- function(data, group_vars, fill_var, plot_title,
       ggplot2::theme(strip.text = ggplot2::element_text(size = 14, face = "bold"))
   }
 
-  png_path <- file.path("/results", paste0(output_prefix, ".png"))
+  png_path <- file.path(resultsDir, paste0(output_prefix, ".png"))
   ggplot2::ggsave(png_path, p, width = 13, height = 9, dpi = 300)
   message("Saved: ", png_path)
 }
@@ -531,7 +529,7 @@ create_cluster_composition_table <- function(seurat_object,
 #' @param type            "proportion" or "count"
 #' @param cluster_colors  Named colour vector
 #' @param save_plot       Save to file if TRUE
-#' @param filename        Full output path — use /results/filename.png
+#' @param filename        Full output path — in the results folder, e.g. file.path(resultsDir, "name").png
 #' @param width           PNG width in inches (default 13)
 #' @param height          PNG height in inches (default 9)
 #' @param dpi             PNG resolution (default 300)

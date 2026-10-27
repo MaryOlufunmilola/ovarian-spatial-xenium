@@ -5,8 +5,10 @@
 # ----------------------------------------------------------
 
 # Load libraries first
-source("/code/load_libraries.R")
-source("/code/functions.R")
+# Code Ocean runs from /code; set CODE_DIR=code to run from the repository root.
+code_dir <- Sys.getenv("CODE_DIR", "/code")
+source(file.path(code_dir, "load_libraries.R"))
+source(file.path(code_dir, "functions.R"))
 
 library(ggtext)
 library(officer)
