@@ -1,5 +1,9 @@
 # ----------------------------------------------------------
-# Libraries, paths, and options
+# Loading Libraries
+# ----------------------------------------------------------
+# PATHS NOTE FOR LOCAL USE:
+# Replace dataDir/resultsDir with here::here() equivalents
+# and add "here" back to cran_pkgs.
 # ----------------------------------------------------------
 
 # Load all packages, pre-installed at build time, no installation here
@@ -14,7 +18,7 @@ pkgs <- c(
   "harmony", "pheatmap", "RColorBrewer",
   "igraph", "data.table",
   # Bioconductor
-  "BiocParallel", "SingleR", "glmGamPoi", "UCell"
+  "BiocParallel", "SingleR", "glmGamPoi", "UCell" 
 )
 
 for (pkg in pkgs) {
@@ -22,12 +26,10 @@ for (pkg in pkgs) {
 }
 
 # ----------------------------------------------------------
-# Paths: Code Ocean defaults, overridable for local runs
-#   DATA_DIR=data/ RESULTS_DIR=results/ CODE_DIR=code Rscript code/analysis.R
+# Paths (Code Ocean fixed paths)
 # ----------------------------------------------------------
-dataDir    <- Sys.getenv("DATA_DIR", "/data/")
-resultsDir <- Sys.getenv("RESULTS_DIR", "/results/")
-dir.create(resultsDir, showWarnings = FALSE, recursive = TRUE)
+dataDir    <- "/data/"
+resultsDir <- "/results/"
 
 # ----------------------------------------------------------
 # Options

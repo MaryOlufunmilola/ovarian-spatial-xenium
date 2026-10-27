@@ -35,6 +35,7 @@ RUN Rscript -e 'remotes::install_version("RColorBrewer", "1.1-3")' \
     && Rscript -e 'remotes::install_version("future", "1.70.0")' \
     && Rscript -e 'remotes::install_version("ggplot2", "4.0.3")' \
     && Rscript -e 'remotes::install_version("ggrepel", "0.9.8")' \
+    && Rscript -e 'remotes::install_version("harmony")' \
     && Rscript -e 'remotes::install_version("pacman", "0.5.1")' \
     && Rscript -e 'remotes::install_version("parallelly", "1.47.0")' \
     && Rscript -e 'remotes::install_version("pheatmap", "1.0.13")' \
@@ -72,7 +73,7 @@ RUN conda install -y -c conda-forge -c bioconda openssl zlib \
         'BiocParallel', \
         'BiocNeighbors', \
         'SingleR', \
-        'UCell' \
+        'UCell' \      
     ), update=FALSE, ask=FALSE)" \
     && Rscript -e "install.packages('NMF', repos='https://cloud.r-project.org')" \
     && Rscript -e "devtools::install_github('jinworks/CellChat', upgrade='never')"

@@ -1,23 +1,22 @@
 # ----------------------------------------------------------
 # Xenium Spatial Transcriptomics: Main Analysis
 # Authors: Funmi Oyebamiji
-# Depends on: load_libraries.R, functions.R
-# Output: Seurat_object.rds in the results folder
+# Depends on: load_libraries.R, functions.R 
+# Output: /results/Seurat_object.rds
 # ----------------------------------------------------------
 
 set.seed(1234)
 
-# Code Ocean runs from /code; set CODE_DIR=code to run from the repository root.
-code_dir <- Sys.getenv("CODE_DIR", "/code")
-source(file.path(code_dir, "load_libraries.R"))
-source(file.path(code_dir, "functions.R"))
+# Source dependencies if running interactively outside run.sh 
+source("/code/load_libraries.R")
+source("/code/functions.R")
 
 # ==========================================================================
 # STEP 1: Load and pre-process Xenium samples
 # ==========================================================================
 
-# TRUE (default) = toy RDS files as on Code Ocean; FALSE = Xenium output folders
-use_toy_data <- as.logical(Sys.getenv("USE_TOY_DATA", "TRUE"))
+use_toy_data <- TRUE  # TRUE = Code Ocean toy RDS files
+                      # FALSE = real Xenium folders
 
 if (use_toy_data) {
   # Example data path 
@@ -59,19 +58,18 @@ if (use_toy_data) {
   }
 
 } else {
-  # Real data path: one Xenium output folder per sample in dataDir
-  # (folders only, so the SingleR reference .rds files are skipped)
-  xfiles     <- list.dirs(dataDir, recursive = FALSE, full.names = FALSE)
+  # Real data path (Xenium folders) 
+  xfiles     <- list.files(dataDir)
   xenium.obj <- list()
   sample_ids <- c()
 
   for (i in xfiles) {
     message("  Preparing spatial data for sample: ", i)
 
-    j <- i
+    j <- i 
     sample_ids <- c(sample_ids, j)
 
-    xenium.obj[[j]] <- LoadXenium(file.path(dataDir, i), fov = j, segmentations = "cell")
+    xenium.obj[[j]] <- LoadXenium(paste0(dataDir, i), fov = j, segmentations = "cell")
     xenium.obj[[j]]$sample <- j
 
     png(file.path(resultsDir, paste0("VlnPlotbeforefilter_", j, ".png")),
@@ -131,7 +129,7 @@ message("Step 2.3: Done integrating...")
 #saveRDS(xen_integrated, file.path(resultsDir, "xen_integrated.rds"))
 
 # ==========================================================================
-# STEP 3: SingleR cell type annotation (first pass, informs manual labels)
+# STEP 3: SingleR cell-type annotation (first-pass, informs manual labels)
 # ==========================================================================
 
 # References were pre-downloaded and uploaded to /data/
@@ -213,7 +211,7 @@ if (use_toy_data) {
 }
 
 # ==========================================================================
-# STEP 6: Subclustering
+# STEP 6: Sub-clustering
 # ==========================================================================
 
 if (!use_toy_data) {
@@ -286,7 +284,7 @@ xen_integrated$runharmony_combined <- combined_cluster_labels
 all_markers <- run_presto(xen_integrated,
                           group_by  = "runharmony_combined",
                           save_path = file.path(resultsDir, "presto_EachCluster_final.csv"))
-message("Step 6: Done subclustering...")
+message("Step 5: Done subclustering...")
 
 # ==========================================================================
 # STEP 7: Final Cell type naming
@@ -342,7 +340,7 @@ if (!use_toy_data) {
 
   # average per subcluster
   avg_sub <- xen_integrated@meta.data %>%
-    group_by(runharmony_combined) %>%
+    group_by(runharmony_combined) %>%   # replace with your actual subcluster column
     summarise(across(all_of(subcluster_module_cols), mean), .groups = "drop")
 
   # assign by highest score within parent cell type
@@ -432,4 +430,4 @@ top_genes <- filtered_genes %>%
 
 # Save final annotated object to be loaded by figure_script_1.R and figure_script_2.R
 saveRDS(xen_integrated, file.path(resultsDir, "Seurat_object.rds"))
-message("Step 8: Done. Seurat_object.rds saved to ", resultsDir)
+message("Step 7: Done. Seurat_object.rds saved to /results/")

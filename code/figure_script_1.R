@@ -1,5 +1,5 @@
 # ----------------------------------------------------------
-# Spatial CellChat analysis for the VSTM5 high and low groups
+# CellChat spatial analysis, VSTM5 High and Low conditions
 # Authors: Funmi Oyebamiji
 # Depends on: Seurat object produced by analysis.R
 # Usage:
@@ -7,10 +7,8 @@
 #   Rscript /code/figure_script_1.R High
 # ----------------------------------------------------------
 
-# Code Ocean runs from /code; set CODE_DIR=code to run from the repository root.
-code_dir <- Sys.getenv("CODE_DIR", "/code")
-source(file.path(code_dir, "load_libraries.R"))
-source(file.path(code_dir, "functions.R"))
+source("/code/load_libraries.R")
+source("/code/functions.R")
 
 # Read condition from command-line argument ────────────────────────────────
 args      <- commandArgs(trailingOnly = TRUE)
@@ -43,6 +41,6 @@ rm(seurat_subset)
 gc()
  
 # Save output ──────────────────────────────────────────────────────────────
-out_file <- file.path(resultsDir, paste0("vstm5", tolower(condition), ".rds"))
+out_file <- file.path(resultsDir, paste0("vstm5", tolower(condition), ".rds"))  
 saveRDS(cellchat_result, file = out_file)
 message("Saved: ", out_file)

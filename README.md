@@ -6,7 +6,8 @@ R code for the Xenium spatial transcriptomics analysis in:
 > recurrent ovarian cancer and a germline *BRCA1* or *BRCA2* mutation: a phase I/II study.
 > *Nature Communications* (2026). https://doi.org/10.1038/s41467-026-78395-y
 
-Code by Funmi Oyebamiji and Eleanor Paskus.
+Code by Funmi Oyebamiji and Eleanor Paskus. The code here is the version published with
+the paper and run in its Code Ocean capsule.
 
 The paper reports, as an exploratory post hoc analysis, that low VSTM5 or IFIT1B
 expression was associated with treatment benefit and longer progression free survival.
@@ -25,10 +26,9 @@ communication (CellChat) in the VSTM5 low and high groups, and the figures.
 | 8 | `analysis.R` | Markers for each cell type and for each pair of cell types; saves `Seurat_object.rds` |
 | 9 | `figure_script_1.R` | Spatial CellChat, run separately for the VSTM5 low and high groups |
 | 10 | `figure_script_2.R` | Paper figures (dot plots, cell type composition, CellChat comparisons), saved as PowerPoint files |
-| optional | `eni_figures.R` | Diagnostic UMAPs (by sample, cluster, and SingleR label); not in the paper |
+| optional | `eni_figures.R` | Diagnostic plots, not in the paper and not called by `run`; its first loop looks for sample files by a placeholder name pattern that must be set before it is used |
 
-`run` runs steps 1 to 10 in order and records each step's run time in `timing.tsv` in
-the results folder.
+`run` runs steps 1 to 10 in order.
 
 Cell types in the paper were named by inspecting marker genes for each cluster and
 subcluster (`new_names` in Step 7 of `analysis.R`). SingleR labels were used as a guide,
@@ -56,28 +56,28 @@ end to end; they will not match the paper's figures.
 You need the Xenium output folders (see Data below), R 4.4, and the packages in
 `environment/Dockerfile`. The full dataset needs more than 128 GB of RAM.
 
-```bash
-git clone https://github.com/MaryOlufunmilola/ovarian-spatial-xenium.git
-cd ovarian-spatial-xenium
-mkdir -p data results
-# put one Xenium output folder per sample in data/
-```
+The scripts use Code Ocean's fixed paths (`/code`, `/data`, `/results`). To run them
+elsewhere:
 
-Save the SingleR references to `data/` once:
+1. In `code/load_libraries.R`, set `dataDir` and `resultsDir` to your folders.
+2. At the top of each script, change `source("/code/...")` to your path to `code/`.
+3. In `code/functions.R`, `analyze_cellchat()` and `analyze_proportions()` write to
+   `/results` directly; change those paths too.
+4. In `code/analysis.R`, set `use_toy_data <- FALSE`.
+5. For the full data, `analysis.R` treats every entry in `dataDir` as a Xenium sample
+   folder, and also reads the SingleR references (`hpca_ref.rds`, `blueE_ref.rds`) from
+   it. Keep the references in a separate folder and point their two `readRDS()` lines
+   in Step 3 to it.
+
+Save the SingleR references once:
 
 ```r
-saveRDS(celldex::HumanPrimaryCellAtlasData(), "data/hpca_ref.rds")
-saveRDS(celldex::BlueprintEncodeData(),       "data/blueE_ref.rds")
+saveRDS(celldex::HumanPrimaryCellAtlasData(), "hpca_ref.rds")
+saveRDS(celldex::BlueprintEncodeData(),       "blueE_ref.rds")
 ```
 
-Then run everything from the repository root:
-
-```bash
-CODE_DIR=code DATA_DIR=data/ RESULTS_DIR=results/ USE_TOY_DATA=FALSE bash run
-```
-
-Without these settings the scripts use the Code Ocean paths and the toy data, so the
-capsule runs unchanged.
+Then run the scripts in the same order as `run`: `analysis.R`, `figure_script_1.R Low`,
+`figure_script_1.R High`, `figure_script_2.R`.
 
 ## Inputs and outputs
 
@@ -88,7 +88,6 @@ capsule runs unchanged.
 | CellChat | `vstm5low.rds`, `vstm5high.rds` |
 | Markers | `presto_EachCluster_original.csv`, `presto_EachCluster_final.csv`, `presto_EachCelltype.csv`, `presto_EachCelltypevsAnotherCelltype.csv` |
 | Figures | QC violin plots for each sample (PNG); paper figures as PowerPoint files from `figure_script_2.R` |
-| Run record | `timing.tsv` |
 
 ## Software
 
@@ -112,7 +111,7 @@ code/functions.R        shared functions (markers, plots, CellChat, proportions)
 code/analysis.R         steps 1 to 8
 code/figure_script_1.R  spatial CellChat for one VSTM5 group
 code/figure_script_2.R  paper figures (written by Eleanor Paskus, modified by Funmi Oyebamiji)
-code/eni_figures.R      optional diagnostic figures
+code/eni_figures.R      optional diagnostic plots (not called by run)
 environment/Dockerfile  Code Ocean environment
 run                     runs everything in order
 ```
